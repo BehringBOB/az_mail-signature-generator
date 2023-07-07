@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Mail Sig Generator</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="pragma" content="no-cache" />
+
+    <link rel="stylesheet" href="./style.css?v=2">
+
+</head>
+
+<body>
+
+    <div id="gen">
+        <h1>Generate your <span class="orange">mail signature</span></h1>
+
+
+        <div id="templateSelector">
+            <div class="label">Select Template</div>
+            <div class="selected">Azerion DACH - madvertise</div>
+            <div class="options">
+                <div class="option" data-option="azerionDACH">Azerion DACH</div>
+                <div class="option" data-option="azerionDACH_himedia">Azerion DACH - HiMedia</div>
+                <div class="option" data-option="azerionDACH_madvertise">Azerion DACH - madvertise</div>
+                <div class="option" data-option="azerionDACH_vlyby">Azerion DACH - Vlyby</div>
+                <!-- <div class="option" data-option="azerionDACH2">Azerion DACH2</div> -->
+            </div>
+        </div>
+
+        <script>
+
+            // TEMPLATE SELECTION
+            let dropdown = document.querySelector('#templateSelector');
+            let selection = dropdown.querySelector('.selected');
+            let ddOptions = dropdown.querySelectorAll('.option');
+
+            //Eventlistener Option Selection
+            ddOptions.forEach(function (el) {
+                let attr = el.getAttribute('data-option')
+
+                //only enabled options are clickable
+                if (!el.classList.contains('disabled')) {
+                    el.addEventListener('click', function () {
+                        selection.innerHTML = el.innerHTML;
+
+                        //do else something when selected (load template)
+                        loadTemplate(el.getAttribute('data-option'));
+                    });
+                }
+            });
+
+            dropdown.addEventListener('click', function () {
+                dropdown.classList.toggle('expanded');
+            })
+
+
+            function loadTemplate(templatename) {
+                fetch('template_' + templatename + '.html')
+                    .then(response => response.text())
+                    .then((data) => {
+                        signature.innerHTML = data;
+                    })
+                    .then(() => {
+                        showLegalTxt();
+                        formEvents();
+                    })
+            }
+
+
+        </script>
+
+        <form id="generatorform" class="form" autocomplete="off" action="">
+
+            <div>
+                <label for="input_name">Your Name</label>
+                <input id="input_name" type="text">
+            </div>
+
+            <div>
+                <label for="input_title">Position</label>
+                <input id="input_title" type="text">
+            </div>
+
+
+
+            <div id="inputDiv_phone" class="hidden">
+                <label for="input_phone">Phone</label>
+                <input id="input_phone" type="tel" value="">
+            </div>
+
+            <div>
+                <label for="input_mobile" class="">Mobile</label>
+                <input id="input_mobile" type="tel">
+            </div>
+
+            <div>
+                <label for="input_mail" class="">Email</label>
+                <input id="input_mail" type="email">
+            </div>
+
+            <div id="inputDiv_linkedIn" class="hidden">
+                <label for="input_linkedInHandle">LinkedIn handle</label>
+                <input id="input_linkedInHandle" type="text" value="">
+            </div>
+
+            <!-- <div>
+                <label for="input_address" class="">Address</label>
+                <input id="input_address" type="text">
+            </div>  -->
+
+            <div>
+                <label for="check_phone" class="checkbox">
+                    <input id="check_phone" type="checkbox">
+                    <span>Phone number</span>
+                </label>
+            </div>
+
+            <div>
+                <label for="check_LinkedIn" class="checkbox">
+                    <input id="check_LinkedIn" type="checkbox">
+                    <span>LinkedIn Account</span>
+                </label>
+            </div>
+
+            <div>
+                <label for="check_LegalTxt" class="checkbox">
+                    <input id="check_LegalTxt" type="checkbox" checked>
+                    <span>Show legal text</span>
+                </label>
+            </div>
+
+        </form>
+
+        <span id="reset">Reset generator</span>
+    </div>
+
+    <div id="mailwindow">
+        <div id="mail">
+            <div id="mailhead">
+                <div>
+                    <div>To: Your Recipient</div>
+                    <div>Subject: Hello World</div>
+                </div>
+                <div>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <div id="mailcontent">
+                <p>Hi David, <br>Lorem ipsum dolor sit amet, consetetur sadipscing elitr,...<br><br>Have a nice day.</p>
+            </div>
+
+            <div id="signatur"></div>
+        </div><!-- ENDE mail-->
+
+        <div id="copybox">
+            <span class="btn btn-primary" id="copySigBtn">
+                <span>Copy signature</span><span>(for Gmail, Outlook)</span>
+            </span>
+
+            <span class="btn btn-secondary" id="copySrcBtn">
+                <span>Copy source code</span><span>(for Apple Mail, Thunderbird)</span>
+            </span>
+
+        </div>
+
+        <div id="feedback"></div>
+
+    </div>
+
+    <script>
+
+        const form = document.getElementById('generatorform');
+        const mailWindow = document.getElementById('mailwindow');
+        const signature = document.getElementById('signatur');
+
+
+        const defaultPerson = [
+            'John Doe',
+            'FeelGood Manager',
+            '+49 123 456 789',
+            'john.doe@azerion.com',
+            'johndoe1337',
+            'Example Street 420, 1337 City, SuperNiceCountry'
+        ]
+
+
+
+        createListener = (inputName) => {
+            let inputEl = document.getElementById('input_' + inputName);
+            let sigEl = signature.querySelector('#sig_' + inputName);
+
+            if (!sigEl == false && inputEl.value != '') {
+                sigEl.innerHTML = inputEl.value;
+            }
+            //setting up default value for sig fields
+            else {
+                if (inputName == 'name') { sigEl.innerHTML = defaultPerson[0]; }
+                if (inputName == 'title') { sigEl.innerHTML = defaultPerson[1]; }
+                if (sigEl && inputName == 'phone') { sigEl.innerHTML = defaultPerson[2]; }
+                if (inputName == 'mobile') { sigEl.innerHTML = defaultPerson[2]; }
+                if (inputName == 'mail') { sigEl.innerHTML = defaultPerson[3]; }
+                if (sigEl && inputName == 'linkedInHandle') { sigEl.innerHTML = defaultPerson[4]; }
+                if (inputName == 'address') { sigEl.innerHTML = defaultPerson[5]; }
+            }
+
+            if (sigEl) {
+                inputEl.addEventListener('input', (el) => {
+                    let value = el.target.value;
+
+                    //filling sig fields with data
+                    sigEl.innerHTML = value;
+
+                    //some adjustments for the linked parts in the sig
+                    if (inputName == 'mobile' || inputName == 'phone') {
+                        let aTag = sigEl.parentElement;
+                        let noWhiteSpaceString = value.replace(/ /g, '');
+
+                        if (noWhiteSpaceString.indexOf('+') > -1) {
+                            aTag.setAttribute('href', 'tel:' + noWhiteSpaceString);
+                        }
+                        else {
+                            aTag.setAttribute('href', 'tel:+' + noWhiteSpaceString);
+                        }
+                        //console.log(sigEl.parentElement);
+                    }
+
+                    if (inputName == 'mail') { sigEl.parentElement.setAttribute('href', 'mailto:' + value); }
+                    if (inputName == 'linkedInHandle') { sigEl.parentElement.setAttribute('href', 'https://linkedin.com/in/' + value); }
+
+                    //resetting sig fields with default values when input fields are emptied
+                    if (value == '') {
+                        if (inputName == 'name') { sigEl.innerHTML = defaultPerson[0]; }
+                        if (inputName == 'title') { sigEl.innerHTML = defaultPerson[1]; }
+                        if (inputName == 'phone') { sigEl.innerHTML = defaultPerson[2]; }
+                        if (inputName == 'mobile') { sigEl.innerHTML = defaultPerson[2]; }
+                        if (inputName == 'mail') { sigEl.innerHTML = defaultPerson[3]; }
+                        if (inputName == 'linkedInHandle') { sigEl.innerHTML = defaultPerson[4]; }
+                        if (inputName == 'address') { sigEl.innerHTML = defaultPerson[5]; }
+                    }
+
+                });
+            }
+
+        }
+
+
+        //adding event listener when a template is loaded (redo also when linkedIn/phone is checked)
+        formEvents = () => {
+
+            //collect all input fields in node list and convert to array
+            let allInputs = Array.prototype.slice.call(document.querySelectorAll('input'));
+            //new array for inputs without checkboxes
+            let cleanedInputs = [];
+
+            //remove checkboxes from array
+            for (i = 0; i < allInputs.length; i++) {
+                if (allInputs[i].id.includes('input_')) {
+                    cleanedInputs.push(allInputs[i]);
+                }
+            }
+
+            //loop through cleaned array and create EventListener for inputs (see createListener())
+            for (j = 0; j < cleanedInputs.length; j++) {
+                let inputName = cleanedInputs[j].id.replace('input_', '');
+                createListener(inputName);
+            }
+        }
+
+
+        // function to add some functionality to the form
+        // like animated labeles
+        function loadForm() {
+
+            let formDivs = form.getElementsByTagName('div');
+
+            for (i = 0; i < formDivs.length; i++) {
+                //     console.log(formDivs)
+                let input = formDivs[i].getElementsByTagName('input')[0];
+
+                if (input.value != '') {
+                    input.parentElement.classList.toggle('focused');
+                }
+
+                input.addEventListener('focus', function () {
+                    if (this.value != '') {
+                        this.parentElement.classList.toggle('focused');
+                    }
+                    this.parentElement.classList.toggle('focused');
+                });
+
+                input.addEventListener('focusout', function () {
+                    if (this.value == '') {
+                        this.parentElement.classList.toggle('focused');
+                    }
+                });
+            }
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            loadForm(); //adding some stylish functions to the form
+            loadTemplate('azerionDACH_madvertise');
+        })
+
+
+
+        ///////////////////
+        // Legal text
+        ///////////////////
+        const checkLegalTxt = document.getElementById('check_LegalTxt');
+        const legalTxt = `
+            <td><span style="font-family:Arial,Helvetica,sans-serif;color:#d9d9d9;font-size:15px;line-height:22px">____________________________________</span>
+                <p id="legalTxt" style="font-family:Arial,Helvetica,sans-serif;color:#d9d9d9;font-size:11px;line-height:14px;text-align:justify;margin:0;"><br>Notice to recipient: This email is meant for only the intended recipient of the transmission, and may contain confidential, proprietary or legally privileged material.  No confidentiality or privilege is waived by any accidental or unintentional transmission.  If you received this email in error, any review, use, disclosure, dissemination, distribution, or copying of this email is strictly prohibited.  Please notify us immediately of the error by return e-mail and please delete this message and all copies of it from your system.</p></td>
+            `;
+
+
+        function showLegalTxt() {
+            let legalTxtRow = document.getElementById('legalTxtRow');
+
+            if (checkLegalTxt.checked == true) {
+                legalTxtRow.innerHTML = legalTxt;
+            }
+            else {
+                legalTxtRow.innerHTML = '';
+            }
+        }
+
+        checkLegalTxt.addEventListener('change', showLegalTxt)
+
+
+
+        ///////////////////
+        // phone option
+        ///////////////////
+        const checkPhone = document.getElementById('check_phone');
+        const inputDiv_phone = document.getElementById('inputDiv_phone');
+        var phoneNumber = '';
+        const phoneContent = `
+            <td style="font-family:Arial,Helvetica,sans-serif;color:rgb(0,0,0);font-size:12px;line-height:21px">Phone: <a id="sig_phone_link" href="tel:${phoneNumber}" style="color:#1155cc" target="_blank"><span id="sig_phone">+49 123 456 798</span></a></td>
+            `;
+
+        function showPhone() {
+            let phoneRow = document.getElementById('phoneRow');
+
+            if (checkPhone.checked == true) {
+                phoneRow.innerHTML = phoneContent;
+                inputDiv_phone.classList.toggle('hidden');
+                formEvents();
+            }
+            else {
+                phoneRow.innerHTML = '';
+                inputDiv_phone.classList.toggle('hidden');
+            }
+        }
+
+        checkPhone.addEventListener('change', showPhone);
+
+
+        ///////////////////
+        // linkedIn option
+        ///////////////////
+        const checkLinkedIn = document.getElementById('check_LinkedIn');
+        const inputDiv_linkedIn = document.getElementById('inputDiv_linkedIn');
+        var linkedInHandle = '';
+        const linkedInContent = `
+            <td style="font-family:Arial,Helvetica,sans-serif;color:rgb(0,0,0);font-size:12px;line-height:21px">LinkedIn: <a id="sig_linkedin_link" href="https://linkedin.com/in/${linkedInHandle}" style="color:#1155cc" target="_blank"><span id="sig_linkedInHandle">johndoe1337</span></a></td>
+            `;
+
+        function showLinkedIn() {
+            let linkedInRow = document.getElementById('linkedInRow');
+
+            if (checkLinkedIn.checked == true) {
+                linkedInRow.innerHTML = linkedInContent;
+                inputDiv_linkedIn.classList.toggle('hidden');
+                formEvents();
+            }
+            else {
+                linkedInRow.innerHTML = '';
+                inputDiv_linkedIn.classList.toggle('hidden');
+            }
+
+        }
+
+        checkLinkedIn.addEventListener('change', showLinkedIn);
+
+
+
+        ///////////////////
+        // copy signature
+        ///////////////////
+        let copySigBtn = document.getElementById('copySigBtn');
+
+        copySigBtn.addEventListener('click', function () {
+            async function copy() {
+                const content = document.getElementById('signatur').innerHTML;
+                const blob = new Blob([content], { type: 'text/html' });
+                const richTextInput = new ClipboardItem({ 'text/html': blob });
+                await navigator.clipboard.write([richTextInput]);
+            };
+            copy().then(
+                function (value) {
+                    console.log('yay');
+                    showfeedback('Signature copied');
+                },
+                function (error) {
+                    console.log('nay');
+                    showfeedback('Error');
+                }
+            );
+        })
+
+
+        ///////////////////
+        // copy sourcecode
+        ///////////////////
+        let copySrcBtn = document.getElementById('copySrcBtn');
+        copySrcBtn.addEventListener('click', function () {
+
+            async function copy() {
+                // const content = document.getElementById('signatur').innerHTML;
+                // const blob = new Blob([content], { type: 'text/html' });
+
+                const content = document.getElementById('signatur').innerHTML;
+                var a = content.replace(/(\r\n|\n|\r)/gm, "");
+                var b = a.replace(/> *</g, '><');
+
+                const richTextInput = new ClipboardItem({ 'text/html': b });
+                await navigator.clipboard.writeText(b);
+            };
+            copy().then(
+                function (value) {
+                    console.log('yay');
+                    showfeedback('Source Code copied');
+                },
+                function (error) {
+                    console.log('nay');
+                    showfeedback('Error');
+                }
+            );
+
+        })
+
+
+        ///////////////////
+        //reset form
+        ///////////////////
+
+        let resetBtn = document.getElementById('reset');
+        resetBtn.addEventListener('click', function () {
+
+            let formDivs = form.getElementsByTagName('div');
+            for (i = 0; i < formDivs.length; i++) {
+                let input = formDivs[i].getElementsByTagName('input')[0];
+                input.value = '';
+                input.setAttribute('value', '');
+                input.parentElement.classList.remove('focused');
+            }
+            //loadTemplate('azerionDACH');
+        })
+
+
+
+        //SHOW interaction feedback to user
+        let feedback = document.getElementById('feedback');
+
+        function showfeedback(msg) {
+            var feedb = document.createElement('h2');
+            feedb.innerHTML = msg;
+            feedback.appendChild(feedb);
+
+            feedback.style.animation = 'showfeedback 1s ease 1'
+        }
+
+        feedback.addEventListener('animationend', function () {
+            feedback.setAttribute('style', '');
+            feedback.innerHTML = '';
+        })
+
+
+
+
+        generateInputField = (id, txt, type) => {
+
+            let div = document.createElement('div');
+            let label = document.createElement('label');
+            let input = document.createElement('input');
+
+            label.setAttribute('for', 'input_' + id);
+            label.innerHTML = txt; //label txt
+
+            input.id = 'input_' + id;
+            input.type = type;
+            input.addEventListener('input', function () {
+                if (signature.querySelector('#sig_' + id)) {
+                    signature.querySelector('#sig_' + id).innerHTML = this.value;
+                }
+                else { console.log('field not found in template'); }
+            })
+
+
+            div.appendChild(label);
+            div.appendChild(input);
+            form.appendChild(div);
+
+            return div;
+        }
+
+
+
+
+    </script>
+
+</body>
+
+</html>
