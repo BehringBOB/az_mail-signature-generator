@@ -15,6 +15,6 @@ At the end many signatures looked different, because there where many workaround
 
 <br />
 
-The generator ist hosted at: https://we-live-mobile.com/mailsig/
+The generator ist hosted at: https://we-are-azerion.com/mailsig/
 
 It supports different templates, which are seperate html files (with "nice" oldschool table layouts).
