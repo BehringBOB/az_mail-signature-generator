@@ -3,12 +3,10 @@
 
 <head>
     <title>Mail Sig Generator</title>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="pragma" content="no-cache" />
-
-    <link rel="stylesheet" href="./style.css?v=2">
+    <link rel="stylesheet" href="./style.min.css?v=2">
 
 </head>
 
@@ -20,11 +18,11 @@
 
         <div id="templateSelector">
             <div class="label">Select Template</div>
-            <div class="selected">Azerion DACH - madvertise</div>
+            <div class="selected">Azerion DACH - BER</div>
             <div class="options">
-                <div class="option" data-option="azerionDACH">Azerion DACH</div>
-                <div class="option" data-option="azerionDACH_himedia">Azerion DACH - HiMedia</div>
-                <div class="option" data-option="azerionDACH_madvertise">Azerion DACH - madvertise</div>
+                <div class="option" data-option="azerionDACH_duesseldorf">Azerion DACH - DUE</div>
+                <div class="option" data-option="azerionDACH_berlin">Azerion DACH - BER</div>
+                <!-- <div class="option" data-option="azerionDACH_berlin">Azerion DACH - madvertise</div> -->
                 <div class="option" data-option="azerionDACH_vlyby">Azerion DACH - Vlyby</div>
                 <!-- <div class="option" data-option="azerionDACH2">Azerion DACH2</div> -->
             </div>
@@ -305,7 +303,7 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             loadForm(); //adding some stylish functions to the form
-            loadTemplate('azerionDACH_madvertise');
+            loadTemplate('azerionDACH_berlin');
         })
 
 
