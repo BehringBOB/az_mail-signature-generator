@@ -10,11 +10,11 @@ At the end many signatures looked different, because there where many workaround
 
 <br />
 
-[![Screenshot](./assets/screenshot.jpg)](https://we-are-azerion.com/mailsig/)
+[![Screenshot](./assets/screenshot.jpg)]([https://we-are-azerion.com/mailsig/](https://we-are-azerion.com/AZtools/mailsig/))
 
 
 <br />
 
-The generator ist hosted at: [https://we-are-azerion.com/AZtools/mailsig/](https://we-are-azerion.com/AZtools/mailsig/)
+The generator is hosted at: [https://we-are-azerion.com/AZtools/mailsig/](https://we-are-azerion.com/AZtools/mailsig/)
 
 It supports different templates, which are seperate html files (with "nice" oldschool table layouts).
